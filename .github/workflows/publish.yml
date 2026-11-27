@@ -50,7 +50,7 @@ jobs:
       - uses: actions/configure-pages@v5
         id: pages
         if: inputs.publish
-      - uses: SkyCD/marketplace-feed-action@v1
+      - uses: SkyCD/marketplace-feed-action@v1.1.0
         with:
           base-url: ${{ inputs.base-url || steps.pages.outputs.base_url }}
           site-directory: ${{ inputs.site-directory }}

@@ -3,7 +3,7 @@ import { releasePackages, repositoryMetadata } from './github.js';
 import { ensureLandingPage, within, writeJson } from './site.js';
 
 export async function generateFeed(options) {
-    const repo = await repositoryMetadata(options.repository);
+    const repo = await repositoryMetadata(options.github, options.repository);
     const packageId = options.packageId || repo.name;
     if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(packageId)) {
         throw new Error('Invalid NuGet package ID: ' + packageId);
@@ -17,7 +17,7 @@ export async function generateFeed(options) {
     }
     const location = relative(site, output).split(sep).filter(Boolean).map(encodeURIComponent).join('/');
     const base = new URL(location ? location + '/' : './', rootUrl).href;
-    const releases = await releasePackages(repo, packageId);
+    const releases = await releasePackages(options.github, repo, packageId);
     if (!releases.length) throw new Error('No published release assets found for ' + packageId);
     const latest = releases.findLast(release => !release.version.includes('-')) ?? releases.at(-1);
     const registrationPath = 'registration/' + packageId.toLowerCase() + '/';

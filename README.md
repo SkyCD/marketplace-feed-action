@@ -4,10 +4,10 @@ Generate a NuGet v3 registration-only feed and a SkyCD publisher manifest from p
 
 ## Generate files in an existing site build
 
-Run the JavaScript generator via the composite action after building the site. Pass the same directory to your own upload or deployment step.
+Run the JavaScript generator via the JavaScript action after building the site. Pass the same directory to your own upload or deployment step.
 
 ```yaml
-- uses: SkyCD/marketplace-feed-action@v1
+- uses: SkyCD/marketplace-feed-action@v1.1.0
   with:
     base-url: https://example.github.io/project/
     site-directory: dist
@@ -27,27 +27,28 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: SkyCD/marketplace-feed-action/.github/workflows/publish.yml@v1
+    uses: SkyCD/marketplace-feed-action/.github/workflows/publish.yml@v1.1.0
     with:
       publish: true
       feed-subfolder: nuget
 ```
 
-Set `publish: false` and specify `base-url` to upload the generated site as a workflow artifact. For an existing site build that needs additional steps before deployment, use the composite action instead of the reusable workflow.
+Set `publish: false` and specify `base-url` to upload the generated site as a workflow artifact. For an existing site build that needs additional steps before deployment, use the JavaScript action instead of the reusable workflow.
 
-Optional inputs include `package-id` (defaults to the repository name), `display-name`, `min-host-version` (defaults to `3.0.0`), and `max-host-version`. The generator needs Node.js and a ZIP extraction utility. The reusable workflow supplies both on Ubuntu.
+Optional inputs include `package-id` (defaults to the repository name), `display-name`, `min-host-version` (defaults to `3.0.0`), and `max-host-version`. The action runs on the built-in Node.js 24 runtime. It uses unzip on Linux and macOS and tar.exe on Windows.
 
-Run `npm ci` and `npm test` to verify the generator locally.
+Run `npm ci`, `npm test`, and `npm run build` to verify the generator and refresh the bundle.
 
 ## Repository layout
 
-- `action.yml` defines the composite action inputs.
+- `action.yml` defines the JavaScript action inputs.
 - `.github/workflows/publish.yml` generates an artifact or deploys it to GitHub Pages.
 - `src/cli.js` reads the action environment and invokes the generator.
 - `src/generate.js` writes the NuGet registration index and marketplace manifest.
-- `src/github.js` discovers published GitHub Release assets.
+- `src/github.js` discovers published release assets through the official `@actions/github` client.
 - `src/nuget.js` reads NuGet package metadata and compares versions.
 - `src/site.js` writes site files and the fallback landing page.
-- `test/` contains the automated tests.
+- 	est/ contains the automated tests.
+- scripts/build.js builds the checked-in runtime bundle under dist/.
 
 The action is licensed under [MIT](LICENSE).
