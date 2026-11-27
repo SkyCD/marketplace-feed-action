@@ -4,12 +4,11 @@ Generate a NuGet v3 registration-only feed and a SkyCD publisher manifest from p
 
 ## Generate files in an existing site build
 
-Run the JavaScript generator via the JavaScript action after building the site. Pass the same directory to your own upload or deployment step.
+Run the action after building the site. Pass the same directory to your upload or deployment step. Give the job `contents: read` and `pages: read` permissions so the action can read the repository's Pages URL, including its custom domain.
 
 ```yaml
-- uses: SkyCD/marketplace-feed-action@v1.1.0
+- uses: SkyCD/marketplace-feed-action@v1.2.0
   with:
-    base-url: https://example.github.io/project/
     site-directory: dist
     feed-subfolder: nuget
 ```
@@ -27,13 +26,13 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: SkyCD/marketplace-feed-action/.github/workflows/publish.yml@v1.1.0
+    uses: SkyCD/marketplace-feed-action/.github/workflows/publish.yml@v1.2.0
     with:
       publish: true
       feed-subfolder: nuget
 ```
 
-Set `publish: false` and specify `base-url` to upload the generated site as a workflow artifact. For an existing site build that needs additional steps before deployment, use the JavaScript action instead of the reusable workflow.
+Set `publish: false` to upload the generated site as a workflow artifact. In either mode, `base-url` is an optional override for a site hosted elsewhere or for a repository without Pages enabled. For an existing site build that needs additional steps before deployment, use the JavaScript action instead of the reusable workflow.
 
 Optional inputs include `package-id` (defaults to the repository name), `display-name`, `min-host-version` (defaults to `3.0.0`), and `max-host-version`. The action runs on the built-in Node.js 24 runtime. It uses unzip on Linux and macOS and tar.exe on Windows.
 

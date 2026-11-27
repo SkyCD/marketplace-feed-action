@@ -28,3 +28,16 @@ export async function repositoryMetadata(github, repository) {
     const { data } = await github.rest.repos.get(repository);
     return data;
 }
+
+export async function pagesBaseUrl(github, repository, override) {
+    if (override) return override;
+
+    try {
+        const { data } = await github.rest.repos.getPages(repository);
+        if (data.html_url) return data.html_url;
+    } catch (error) {
+        if (error.status !== 403 && error.status !== 404) throw error;
+    }
+
+    throw new Error('Could not read the repository Pages URL. Enable Pages and grant pages: read, or supply a base-url override.');
+}

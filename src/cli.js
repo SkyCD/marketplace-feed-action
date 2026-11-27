@@ -10,7 +10,7 @@ try {
         packageId: getInput('package-id'),
         siteDirectory: getInput('site-directory'),
         feedSubfolder: getInput('feed-subfolder'),
-        baseUrl: getInput('base-url', { required: true }),
+        baseUrl: getInput('base-url'),
         displayName: getInput('display-name'),
         minHostVersion: getInput('min-host-version'),
         maxHostVersion: getInput('max-host-version'),

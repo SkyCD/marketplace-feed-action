@@ -1,5 +1,5 @@
 import { relative, sep } from 'node:path';
-import { releasePackages, repositoryMetadata } from './github.js';
+import { pagesBaseUrl, releasePackages, repositoryMetadata } from './github.js';
 import { ensureLandingPage, within, writeJson } from './site.js';
 
 export async function generateFeed(options) {
@@ -11,7 +11,8 @@ export async function generateFeed(options) {
     const site = within(options.workspace, options.siteDirectory || '_site');
     const subfolder = options.feedSubfolder || '';
     const output = within(site, subfolder);
-    const rootUrl = new URL(options.baseUrl.replace(/\/+$/, '') + '/');
+    const baseUrl = await pagesBaseUrl(options.github, options.repository, options.baseUrl);
+    const rootUrl = new URL(baseUrl.replace(/\/+$/, '') + '/');
     if (rootUrl.protocol !== 'https:' || rootUrl.username || rootUrl.password || rootUrl.search || rootUrl.hash) {
         throw new Error('base-url must be a credential-free HTTPS site URL.');
     }
