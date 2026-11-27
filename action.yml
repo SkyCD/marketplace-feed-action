@@ -26,23 +26,5 @@ inputs:
     description: GitHub token with repository contents read permission
     default: ${{ github.token }}
 runs:
-  using: composite
-  steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
-    - name: Install generator dependencies
-      shell: bash
-      run: npm ci --ignore-scripts --prefix "$GITHUB_ACTION_PATH"
-    - name: Generate static feed
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.token }}
-        INPUT_BASE_URL: ${{ inputs.base-url }}
-        INPUT_SITE_DIRECTORY: ${{ inputs.site-directory }}
-        INPUT_FEED_SUBFOLDER: ${{ inputs.feed-subfolder }}
-        INPUT_PACKAGE_ID: ${{ inputs.package-id }}
-        INPUT_DISPLAY_NAME: ${{ inputs.display-name }}
-        INPUT_MIN_HOST_VERSION: ${{ inputs.min-host-version }}
-        INPUT_MAX_HOST_VERSION: ${{ inputs.max-host-version }}
-      run: node "$GITHUB_ACTION_PATH/generate.mjs"
+  using: node24
+  main: dist/index.js
