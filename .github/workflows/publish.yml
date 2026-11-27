@@ -1,0 +1,85 @@
+name: Generate or publish marketplace feed
+
+on:
+  workflow_call:
+    inputs:
+      publish:
+        description: Deploy the site to GitHub Pages
+        type: boolean
+        default: false
+      base-url:
+        description: Public site URL (required when publish is false)
+        type: string
+        default: ''
+      site-directory:
+        description: Directory containing the site
+        type: string
+        default: _site
+      feed-subfolder:
+        description: Optional directory within the site for feed JSON
+        type: string
+        default: ''
+      package-id:
+        type: string
+        default: ''
+      display-name:
+        type: string
+        default: ''
+      min-host-version:
+        type: string
+        default: '3.0.0'
+      max-host-version:
+        type: string
+        default: ''
+
+concurrency:
+  group: marketplace-feed-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/configure-pages@v5
+        id: pages
+        if: inputs.publish
+      - uses: SkyCD/marketplace-feed-action@v1
+        with:
+          base-url: ${{ inputs.base-url || steps.pages.outputs.base_url }}
+          site-directory: ${{ inputs.site-directory }}
+          feed-subfolder: ${{ inputs.feed-subfolder }}
+          package-id: ${{ inputs.package-id }}
+          display-name: ${{ inputs.display-name }}
+          min-host-version: ${{ inputs.min-host-version }}
+          max-host-version: ${{ inputs.max-host-version }}
+      - uses: actions/upload-artifact@v7
+        if: '!inputs.publish'
+        with:
+          name: marketplace-feed-site
+          path: ${{ inputs.site-directory }}
+          if-no-files-found: error
+      - uses: actions/upload-pages-artifact@v4
+        if: inputs.publish
+        with:
+          path: ${{ inputs.site-directory }}
+
+  deploy:
+    if: inputs.publish
+    needs: generate
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
