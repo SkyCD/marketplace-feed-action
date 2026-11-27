@@ -8,7 +8,7 @@ on:
         type: boolean
         default: false
       base-url:
-        description: Public site URL (required when publish is false)
+        description: Override the site URL from the repository Pages settings
         type: string
         default: ''
       site-directory:
@@ -47,12 +47,9 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
-      - uses: actions/configure-pages@v5
-        id: pages
-        if: inputs.publish
-      - uses: SkyCD/marketplace-feed-action@v1.1.0
+      - uses: SkyCD/marketplace-feed-action@v1.2.0
         with:
-          base-url: ${{ inputs.base-url || steps.pages.outputs.base_url }}
+          base-url: ${{ inputs.base-url }}
           site-directory: ${{ inputs.site-directory }}
           feed-subfolder: ${{ inputs.feed-subfolder }}
           package-id: ${{ inputs.package-id }}

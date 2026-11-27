@@ -2,8 +2,8 @@ name: Generate marketplace feed
 description: Generate static NuGet registration metadata and a SkyCD publisher manifest from GitHub releases
 inputs:
   base-url:
-    description: Public HTTPS URL of the site root
-    required: true
+    description: Override the public HTTPS URL from the repository Pages settings
+    default: ''
   site-directory:
     description: Site directory to write to
     default: _site
@@ -23,7 +23,7 @@ inputs:
     description: Highest supported SkyCD host version, when applicable
     default: ''
   token:
-    description: GitHub token with repository contents read permission
+    description: GitHub token with contents read and, for automatic URL discovery, Pages read permission
     default: ${{ github.token }}
 runs:
   using: node24
