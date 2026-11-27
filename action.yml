@@ -45,4 +45,4 @@ runs:
         INPUT_DISPLAY_NAME: ${{ inputs.display-name }}
         INPUT_MIN_HOST_VERSION: ${{ inputs.min-host-version }}
         INPUT_MAX_HOST_VERSION: ${{ inputs.max-host-version }}
-      run: node "$GITHUB_ACTION_PATH/generate.mjs"
+      run: node "$GITHUB_ACTION_PATH/src/cli.js"

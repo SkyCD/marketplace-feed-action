@@ -2,6 +2,11 @@
   "name": "skycd-marketplace-feed-action",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node --test" },
-  "dependencies": { "@xmldom/xmldom": "0.9.12" }
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "0.9.12"
+  },
+  "license": "MIT"
 }

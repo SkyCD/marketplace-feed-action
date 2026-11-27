@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, existsSync, rmSync, writeFileSync } from 'no
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { ensureLandingPage, within } from './generate.mjs';
+import { ensureLandingPage, within } from '../src/site.js';
 
 const repo = {
     full_name: 'SkyCD/Test', description: 'A "quoted" & <tag> repository',

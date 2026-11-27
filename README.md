@@ -38,3 +38,16 @@ Set `publish: false` and specify `base-url` to upload the generated site as a wo
 Optional inputs include `package-id` (defaults to the repository name), `display-name`, `min-host-version` (defaults to `3.0.0`), and `max-host-version`. The generator needs Node.js and a ZIP extraction utility. The reusable workflow supplies both on Ubuntu.
 
 Run `npm ci` and `npm test` to verify the generator locally.
+
+## Repository layout
+
+- `action.yml` defines the composite action inputs.
+- `.github/workflows/publish.yml` generates an artifact or deploys it to GitHub Pages.
+- `src/cli.js` reads the action environment and invokes the generator.
+- `src/generate.js` writes the NuGet registration index and marketplace manifest.
+- `src/github.js` discovers published GitHub Release assets.
+- `src/nuget.js` reads NuGet package metadata and compares versions.
+- `src/site.js` writes site files and the fallback landing page.
+- `test/` contains the automated tests.
+
+The action is licensed under [MIT](LICENSE).
