@@ -4,7 +4,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DOMParser } from '@xmldom/xmldom';
 
-const maxPackageSize = 64 * 1024 * 1024;
+// Match the SkyCD installer download limit for packages with bundled native codecs.
+const maxPackageSize = 128 * 1024 * 1024;
 
 export function versionOrder(left, right) {
     const [leftCore, ...leftSuffix] = left.split('-');
